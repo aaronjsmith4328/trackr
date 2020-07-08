@@ -4,7 +4,7 @@
 
 ### imports ###
 
-import sys, xlrd, os, xlsxwriter
+import sys, xlrd, os, xlsxwriter, openpyxl
 from optparse import OptionParser
 
 ### get options ###
@@ -33,10 +33,9 @@ parser.add_option("-w", "--days_per_week", dest="days_per_week",
 
 (options, args) = parser.parse_args()
 
-### main ###
+### init ###
 
-def main():
-    ### assigning values ###
+def init():
     global filename 
     filename = options.filename
     print("filename ==> %s" % str(filename))
@@ -56,24 +55,59 @@ def main():
     days_per_week = options.days_per_week
     print("days per week ==> %s " % str(days_per_week))
 
+### workbook ###
+
+def save_workbook():
+    global wb
+    global xlpath
+    wb.save(xlpath)
+
+def excel_init(xlpath):
+    global wb # creating the workbook to be used by the rest of the program
+    try:
+        wb = openpyxl.load_workbook(filename = xlpath)
+        print("Found %s! \nOpening existing workbook..." % xlpath)
+    except FileNotFoundError:
+        print("Workbook %s not found! \nCreating new workbook..." % xlpath)
+        wb = openpyxl.Workbook()
+        wb.save(xlpath)
+        save_workbook()
+        print("Workbook created and saved!")
+
+def project_worksheet(project_name):
+    global ws # creating the worksheet to be used by the rest of the program
+    for sheet in wb:
+        if project_name == sheet.title:
+            print("ERROR: Project name already used!")
+            exit() # the alternative is to name it something different
+    ws = wb.create_sheet(project_name)
+    print("Adding Project %s worksheet to the workbook..." % project_name)
+    save_workbook()
+
+def populate_worksheet():
+    pass # placeholder for now
+
+### main ###
+
+def main():
+
+    init() # Loading args into variables used in rest of program
+    
     if (filename == 0) or (goal == 0) or (project_name == 0) or (unit == 0) or (end_date == 0) or (days_per_week == 0):
-        # This means that one of the arguments was not set
-        print("ERROR: Not all required arguments were given")
-        parser.print_help()
+        print("ERROR: Not all required arguments were given...")
+        parser.print_help() # Exit
 
     print("Recieved all the required arguments!")
+    global xlpath
     xlpath = os.popen('pwd').read().rstrip('\n') + "/" + filename
     print("Absolute path to the excel ws ==> %s" % xlpath)
+
+    excel_init(xlpath)
+
+    project_worksheet(project_name)
+
+    populate_worksheet()
     
-    ### opening the workbook ###
-    global workbook
-    workbook = xlsxwriter.Workbook(filename) # TODO ==> Needs to be able to read and write the same workbook...
-    wb = xlrd.open_workbook(filename)
-    print("workbook %s" % str(type(workbook)))
-    print("wb %s" % str(type(wb)))
-    workbook.add_worksheet(project_name)
-    workbook.close()
-    print("much better!")
-    wb = xlrd.open_workbook(xlpath)
+        
 
 main()
