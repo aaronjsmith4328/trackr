@@ -1,0 +1,66 @@
+#!/usr/bin/python3
+
+# Trackr -- Keeps track of deadlines (by breaking down daily progress goals) using excel and should create helpful metrics
+
+### imports ###
+
+import sys
+from optparse import OptionParser
+
+### get options ###
+
+message = "\nUsage: %prog [options]\n\nDescription: Keeps track of deadlines (by breaking down daily progress goals) using excel and should create helpful metrics"
+
+parser = OptionParser(usage=message)
+
+parser.add_option("-x", "--excel", dest="filename",
+        help="(required)Excel File used to save data to", metavar="EXCEL_FILE", default=0)
+
+parser.add_option("-g", "--goal", dest="goal",
+        help="(required)Final goal needing to be acheived", metavar="NUMBER", default=0)
+
+parser.add_option("-p", "--project", dest="project_name",
+        help="(required)Name of project", metavar="PROJECT_NAME", default=0)
+
+parser.add_option("-u", "--unit", dest="unit",
+        help="(required)Unit of goal being measured", metavar="UNIT", default=0)
+
+parser.add_option("-d", "--end_date", dest="end_date",
+        help="(required)Date in which goal is to be completed format MM-DD-YYYY", metavar="DATE", default=0)
+
+parser.add_option("-w", "--days_per_week", dest="days_per_week",
+        help="(required)Days per week working on the project", metavar="DAYS_PER_WEEK", default=0)
+
+(options, args) = parser.parse_args()
+
+### main ###
+
+def main():
+    ### assigning values ###
+    global filename 
+    filename = options.filename
+    print("filename ==> %s" % str(filename))
+    global goal 
+    goal = options.goal
+    print("goal ==> %s" % str(goal))
+    global project_name 
+    project_name = options.project_name
+    print("project name ==> %s" % str(project_name))
+    global unit 
+    unit = options.unit
+    print("unit ==> %s" % str(unit))
+    global end_date 
+    end_date = options.end_date
+    print("end date ==> %s" % str(end_date))
+    global days_per_week 
+    days_per_week = options.days_per_week
+    print("days per week ==> %s " % str(days_per_week))
+
+    if (filename == 0) or (goal == 0) or (project_name == 0) or (unit == 0) or (end_date == 0) or (days_per_week == 0):
+        # This means that one of the arguments was not set
+        print("ERROR: Not all required arguments were given")
+        parser.print_help()
+    else:
+        print("Recieved all the required arguments!")
+
+main()
