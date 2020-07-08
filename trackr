@@ -4,7 +4,7 @@
 
 ### imports ###
 
-import sys
+import sys, xlrd, os, xlsxwriter
 from optparse import OptionParser
 
 ### get options ###
@@ -60,7 +60,20 @@ def main():
         # This means that one of the arguments was not set
         print("ERROR: Not all required arguments were given")
         parser.print_help()
-    else:
-        print("Recieved all the required arguments!")
+
+    print("Recieved all the required arguments!")
+    xlpath = os.popen('pwd').read().rstrip('\n') + "/" + filename
+    print("Absolute path to the excel ws ==> %s" % xlpath)
+    
+    ### opening the workbook ###
+    global workbook
+    workbook = xlsxwriter.Workbook(filename) # TODO ==> Needs to be able to read and write the same workbook...
+    wb = xlrd.open_workbook(filename)
+    print("workbook %s" % str(type(workbook)))
+    print("wb %s" % str(type(wb)))
+    workbook.add_worksheet(project_name)
+    workbook.close()
+    print("much better!")
+    wb = xlrd.open_workbook(xlpath)
 
 main()
