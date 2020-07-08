@@ -4,7 +4,7 @@ set -e
 
 # Script to test trackr
 
-rm -f bill.xlsx || echo "bill.xlsx wasn't in the dir" # removing fake xlsx
+rm bill.xlsx || echo "bill.xlsx wasn't in the dir" # removing fake xlsx
 
 echo "running --help command"
 ./trackr --help

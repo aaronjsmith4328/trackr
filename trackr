@@ -98,6 +98,7 @@ def populate_worksheet():
     ws.cell(row=1, column=6, value="Friday")
     ws.cell(row=1, column=7, value="Saturday")
     save_workbook()
+    # TODO finish this section...
 
 ### main ###
 
